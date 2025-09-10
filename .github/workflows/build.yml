@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-2019   # Windows 2019 still supports older .NET frameworks
+    runs-on: windows-2022  # or windows-2025
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -20,9 +20,10 @@ jobs:
       - name: Restore packages
         run: nuget restore Fishbot.sln
 
-      - name: Install .NET Framework 3.5
+      # Enable .NET Framework 3.5 feature on the runner
+      - name: Enable .NET Framework 3.5
         run: |
-          choco install netfx-3.5-devpack -y
+          DISM /Online /Enable-Feature /FeatureName:NetFx3 /All
 
       - name: Build solution
         run: msbuild Fishbot.sln /p:Configuration=Release
